@@ -3,6 +3,7 @@ AutoImageDownloader (https://github.com/nbwzx/AutoImageDownloader)
 Copyright (c) 2023 Zixing Wang <zixingwang.cn@gmail.com>
 Licensed under MIT (https://github.com/nbwzx/AutoImageDownloader/blob/main/LICENSE)
 """
+import json
 import os
 import time
 
@@ -61,4 +62,7 @@ if __name__ == "__main__":
     if not os.path.exists("images"):
         os.mkdir("images")
 
-    download("flowers")
+    with open(('Yifan Wang.json'), 'r', encoding='utf8') as filef:
+        letter_pairs = json.load(filef)
+    for index in letter_pairs:
+        download(letter_pairs[index][0])
