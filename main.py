@@ -11,12 +11,13 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def download(search_term: str, num_images: int = 10, image_size: str = "500x500") -> None:
+def download(search_term: str, download_name: str = "", num_images: int = 10, image_size: str = "500x500") -> None:
     """
     Downloads images from Google Images search results for the given search term.
 
     Args:
         search_term (str): The search term to use for the Google Images search.
+        download_name (str, optional): The name to use for the downloaded images (empty means same as search term).
         num_images (int, optional): The number of images to download (default is 10).
         image_size (str, optional): The size of images to search for in the format "widthxheight" 
             (default is "500x500").
@@ -24,6 +25,10 @@ def download(search_term: str, num_images: int = 10, image_size: str = "500x500"
     Returns:
         None
     """
+    # Set the download_name parameter to the search_term value if it is an empty string
+    if download_name == "":
+        download_name = search_term
+
     # Set the URL of the Google Images search results page
     url = f"https://www.google.com/search?q={search_term}+imagesize:{image_size}&tbm=isch"
 
@@ -46,7 +51,7 @@ def download(search_term: str, num_images: int = 10, image_size: str = "500x500"
             url = img["data-src"]
             response = requests.get(url, headers=headers)
             file_path = os.path.join(
-                "images", f"{search_term}_{len(image_urls)}.jpg")
+                "images", f"{download_name}_{len(image_urls)}.jpg")
             with open(file_path, "wb") as f:
                 f.write(response.content)
             image_urls.append(url)
@@ -65,4 +70,4 @@ if __name__ == "__main__":
     with open(('Yifan Wang.json'), 'r', encoding='utf8') as filef:
         letter_pairs = json.load(filef)
     for index in letter_pairs:
-        download(letter_pairs[index][0])
+        download(letter_pairs[index][0], index)
